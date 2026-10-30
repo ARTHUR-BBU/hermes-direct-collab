@@ -2,7 +2,46 @@
 
 [中文](README.zh-CN.md)
 
-A local, operator-driven collaboration ledger for development tasks, with a read-only Hermes Desktop sidebar and a coordination skill. This is not an agent scheduler: the operator must launch and supervise authorized agents, arrange independent review, run tests, and decide whether to accept the work. The CLI records claims and checks consistency; it does not perform those actions.
+**Give multi-agent work a trail, not just a final reply.**
+
+When several agents contribute to a development task, the hard part often comes after delegation: who owns which files, what version was reviewed, and does that review still count after a fix? Those answers can easily get lost across conversations.
+
+Hermes Direct Collab is a local workbench for an operator or coordinating agent. It keeps each assignment and its delivery history together in a ledger: the CLI records the work, an optional read-only Hermes Desktop sidebar shows its declared state, and an included skill guides the coordination workflow. The result is a clearer starting point for review, rework, and handoff—not a substitute for checking the work.
+
+It is intended for trusted local projects where you actively organize authorized agents. It is not an agent scheduler: the operator or coordinator must choose and launch agents, supervise them, arrange independent review, run verification, and decide whether to accept the result.
+
+### One assignment, five stages
+
+A coordinating agent can track an assignment from its initial brief through **setup → delegation → work → review → delivery**. The sidebar presents these five stages from the ledger; they are declared states, not live observation. The CLI works independently of the sidebar, which must be installed separately and refreshed to read again.
+
+- **Local history:** keep task details, progress, submissions and decisions in the project's `.collab/state.json`, so the next person has context.
+- **File-scope checks:** detect declared path conflicts between cooperating tasks before overlapping work becomes a surprise. These checks do not restrict filesystem access.
+- **Review coverage gate:** record the exact paths reviewed; partial coverage may be recorded but cannot satisfy the current acceptance gate.
+- **Rework and handoff:** keep rework on the same task, submit a new snapshot and review after changes, and read a handoff snapshot for the current trail.
+- **Five-stage sidebar:** see the declared task and gate states in Hermes Desktop without giving the sidebar control over agents or the CLI.
+- **Coordination skill:** use the included skill as workflow guidance, not as an automatic dispatcher or security control.
+
+**Language note:** The core interface and output, including the sidebar, are primarily in Chinese. This English README and the English command reference do not mean the product is fully localized.
+
+### What rework looks like
+
+The following is a **fictional illustration**, not a real execution record or copyable CLI commands:
+
+> **Coordinator:** Agent A, implement input validation for the settings page within the agreed files; cover empty and invalid input. I'll register the scope, interfaces, acceptance criteria and budget, then start the task before delegating.
+>
+> **Agent A:** The changes are ready and I've stopped editing.
+>
+> **Coordinator:** I'll record progress and submit a snapshot. Reviewer B, please independently review the agreed scope.
+>
+> **Reviewer B:** Invalid input handling is incomplete; the review fails. I've documented the finding in review evidence.
+>
+> **Coordinator:** I'll record the result and covered paths, then return the same task for rework. After A fixes it, we'll submit a new snapshot for review; the old result cannot stand in for a new review.
+>
+> **Reviewer B:** I've reviewed the new submission and covered all declared paths; it passes.
+>
+> **Coordinator:** I'll run the agreed verification, record it in a separate evidence file, check the gate and current snapshot, and then decide whether to accept. I'll read status and handoff again.
+
+The ledger checks some consistency, but it cannot prove an agent worked, a review was independent or complete, or a test actually ran. People must inspect the work and evidence. Historical acceptance remains even if files or evidence later become stale; check freshness again.
 
 ## Components
 
