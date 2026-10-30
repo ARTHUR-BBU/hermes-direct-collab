@@ -1,0 +1,8 @@
+# Third-party notices and provenance
+
+- An earlier release-copy draft of `skills/direct-multi-agent-collab/SKILL.md` was adapted from a local skill whose frontmatter named **Hermes Agent** and declared **MIT**. The inspected local file did not identify an upstream URL or separate copyright holder; those declarations alone do not establish its provenance or ownership. The current release copy was rewritten for this project using the workbench README as the reference for its documented behavior. The rewrite does not establish the earlier draft's provenance or resolve rights in material outside this copy.
+- The sidebar imports `@hermes/plugin-sdk`, `react`, and `react/jsx-runtime` from its host. These external dependencies are not included as standalone packages here; their respective owners' terms apply. See [Hermes Agent](https://github.com/NousResearch/hermes-agent) and [React](https://github.com/facebook/react). The root LICENSE does not relicense these external projects.
+- Node.js is an external runtime, not distributed here; its own license applies. See [Node.js](https://github.com/nodejs/node).
+- `direct-collab-workbench-sidebar/plugin.js` embeds generated project code from `direct-collab-workbench/ledger-core.js`; see the sidebar README and `build-core.cjs`. Fixture provenance is documented in `direct-collab-workbench/fixtures/README.md`.
+
+References to third-party products, documentation, or commands do not imply that their code or licenses are included. This notice is a best-effort inventory based on the inspected source, not a legal determination or a claim that all provenance has been independently verified.

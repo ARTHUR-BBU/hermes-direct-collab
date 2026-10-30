@@ -1,0 +1,17 @@
+# Local collaboration state may contain private project information
+.collab/
+
+# Dependencies, caches, logs and environment secrets
+node_modules/
+coverage/
+.nyc_output/
+*.log
+.env
+.env.*
+!.env.example
+
+# Local editor and OS artifacts
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
