@@ -6,13 +6,13 @@
 
 When several agents contribute to a development task, the hard part often comes after delegation: who owns which files, what version was reviewed, and does that review still count after a fix? Those answers can easily get lost across conversations.
 
-Hermes Direct Collab is a local workbench for an operator or coordinating agent. It keeps each assignment and its delivery history together in a ledger: the CLI records the work, an optional read-only Hermes Desktop sidebar shows its declared state, and an included skill guides the coordination workflow. The result is a clearer starting point for review, rework, and handoff—not a substitute for checking the work.
+Hermes Direct Collab is a local multi-agent workbench for the Hermes platform. The user supplies the goal and retains final authorization and necessary human decisions. Hermes acts as project manager: within its capabilities and authorization it breaks down work, directly delegates and follows up, may execute tasks itself, arranges independent review, performs verification and accepts against evidence. Review must be independent of the work's author; Hermes need not review its own work. The CLI keeps assignments and history in a ledger, an optional read-only Hermes Desktop sidebar displays declared state, and an included skill guides Hermes—not a substitute for actually checking the work.
 
-It is intended for trusted local projects where you actively organize authorized agents. It is not an agent scheduler: the operator or coordinator must choose and launch agents, supervise them, arrange independent review, run verification, and decide whether to accept the result.
+It is intended for trusted local projects coordinated by Hermes with authorized agents. The CLI and sidebar provide no resident automatic scheduling or monitoring and do not run tests or perform review themselves. Hermes must actually use its available tools to do the work; capabilities and permissions limit what it can do. It reports blockers and evidence and asks the user when a decision is needed, without guaranteeing success.
 
 ### One assignment, five stages
 
-A coordinating agent can track an assignment from its initial brief through **setup → delegation → work → review → delivery**. The sidebar presents these five stages from the ledger; they are declared states, not live observation. The CLI works independently of the sidebar, which must be installed separately and refreshed to read again.
+Hermes can track an assignment from its initial brief through **setup → delegation → work → review → delivery**. The sidebar presents these five stages from the ledger; they are declared states, not live observation. The CLI works independently of the sidebar, which must be installed separately and refreshed to read again.
 
 - **Local history:** keep task details, progress, submissions and decisions in the project's `.collab/state.json`, so the next person has context.
 - **File-scope checks:** detect declared path conflicts between cooperating tasks before overlapping work becomes a surprise. These checks do not restrict filesystem access.
@@ -27,27 +27,29 @@ A coordinating agent can track an assignment from its initial brief through **se
 
 The following is a **fictional illustration**, not a real execution record or copyable CLI commands:
 
-> **Coordinator:** Agent A, implement input validation for the settings page within the agreed files; cover empty and invalid input. I'll register the scope, interfaces, acceptance criteria and budget, then start the task before delegating.
+> **User:** Add input validation to the settings page.
+>
+> **Hermes:** Agent A, implement input validation within the agreed files; cover empty and invalid input. I'll register the scope, interfaces, acceptance criteria and budget, then start the task before delegating.
 >
 > **Agent A:** The changes are ready and I've stopped editing.
 >
-> **Coordinator:** I'll record progress and submit a snapshot. Reviewer B, please independently review the agreed scope.
+> **Hermes:** I'll record progress and submit a snapshot. Reviewer B, please independently review the agreed scope.
 >
 > **Reviewer B:** Invalid input handling is incomplete; the review fails. I've documented the finding in review evidence.
 >
-> **Coordinator:** I'll record the result and covered paths, then return the same task for rework. After A fixes it, we'll submit a new snapshot for review; the old result cannot stand in for a new review.
+> **Hermes:** I'll record the result and covered paths, then return the same task for rework. After A fixes it, we'll submit a new snapshot for review; the old result cannot stand in for a new review.
 >
 > **Reviewer B:** I've reviewed the new submission and covered all declared paths; it passes.
 >
-> **Coordinator:** I'll run the agreed verification, record it in a separate evidence file, check the gate and current snapshot, and then decide whether to accept. I'll read status and handoff again.
+> **Hermes:** I'll run the agreed verification, record it in a separate evidence file, check the gate and current snapshot, and decide whether to accept within my authorization. I'll read status and handoff again, report the evidence and any gaps, and ask the user for any necessary decision.
 
-The ledger checks some consistency, but it cannot prove an agent worked, a review was independent or complete, or a test actually ran. People must inspect the work and evidence. Historical acceptance remains even if files or evidence later become stale; check freshness again.
+The ledger checks some consistency, but it cannot prove an agent worked, a review was independent or complete, or a test actually ran. Hermes must inspect the work and evidence rather than rely on declarations. Historical acceptance remains even if files or evidence later become stale; check freshness again.
 
 ## Components
 
 - `direct-collab-workbench/`: Node standard-library CLI, ledger core, and tests. Project state and history live in the project's `.collab/state.json`.
 - `direct-collab-workbench-sidebar/`: Hermes Desktop plugin displaying the ledger, task status and declared five-stage gates. It reads only; it does not control the CLI or agents.
-- The included `direct-multi-agent-collab` skill describes an operator workflow; a skill is guidance, not an automatic dispatcher or security control. Read its `SKILL.md` and configure the workbench entry path for your installation before using it.
+- The included `direct-multi-agent-collab` skill guides Hermes's coordination workflow; a skill is guidance, not an automatic dispatcher or security control. Read its `SKILL.md` and configure the workbench entry path for your installation before using it.
 
 ## Requirements and installation
 
@@ -102,7 +104,7 @@ Do not use Git Bash's `/f/...` `$PWD` directly as a native Node script path. Sta
 1. Register a task with an owner, relative paths, interfaces, acceptance and budget; start it before delegating. Path conflict checks are advisory coordination among cooperating local users, not an access-control boundary.
 2. Record actual progress and process information; these are statements, not liveness checks. Block, resume or cancel as appropriate. A budget warning is not proof that a process stopped.
 3. Submit snapshots, arrange real independent review and record the reviewer, result, evidence and exact covered paths. Partial coverage may be recorded but cannot satisfy the current acceptance gate. A full coverage declaration, different names and matching hashes still do **not** prove an independent or complete review took place.
-4. Perform actual verification, record a separate evidence file, then accept only when the gate and current hashes match. Rework and resubmit after changes; old pending submissions need a fresh submission and review. Check `status` and `handoff` again: historical acceptance is retained even if files or evidence later become stale. Handoff output is a snapshot, not a live document.
+4. Hermes performs actual verification, records a separate evidence file, then accepts within its authorization only when the gate and current hashes match; the user decides when a human decision is required. Rework and resubmit after changes; old pending submissions need a fresh submission and review. Check `status` and `handoff` again: historical acceptance is retained even if files or evidence later become stale. Handoff output is a snapshot, not a live document.
 
 The ledger is unsigned and has no external trusted anchor. Replay catches some inconsistent histories, not a coordinated forgery, rollback or all deletions. Hashes check content consistency, not truth, authorship or actual test execution. Local locking is not distributed; hostile processes with equivalent filesystem permissions can bypass or race checks. This is **not a sandbox**. Do not use it as an audit system against malicious actors. See [SECURITY.md](SECURITY.md).
 
